@@ -294,9 +294,8 @@ class OrbitalsState(ArchiveSection):
                     setattr(self, f'{quantum_name}_quantum_{quantum_type}', quantity)
 
         # Resolve the degeneracy
-        self.degeneracy = (
-            self.resolve_degeneracy() if self.degeneracy is None else self.degeneracy
-        )
+        if self.degeneracy is None:
+            self.degeneracy = self.resolve_degeneracy()
 
 
 class CoreHole(ArchiveSection):
