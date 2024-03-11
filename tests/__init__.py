@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-import logging
+from nomad import utils
 
 
-logger = logging.getLogger(__name__)
+logger = utils.get_logger(__name__)
