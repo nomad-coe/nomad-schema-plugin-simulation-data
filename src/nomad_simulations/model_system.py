@@ -61,7 +61,7 @@ from nomad.datamodel.metainfo.basesections import Entity, System
 from nomad.datamodel.metainfo.annotations import ELNAnnotation
 
 from .atoms_state import AtomsState
-from .utils import get_sibling_section, is_not_representative
+from .utils import get_sibling_section, is_not_representative, check_archive
 
 
 class GeometricSpace(Entity):
@@ -209,6 +209,9 @@ class GeometricSpace(Entity):
         self.volume = cell.volume * ureg.angstrom**3
 
     def normalize(self, archive, logger) -> None:
+        if not check_archive(archive, logger):
+            return
+
         # Skip normalization for `Entity`
         try:
             self.get_geometric_space_for_atomic_cell(logger)
@@ -298,6 +301,8 @@ class Cell(GeometricSpace):
     )
 
     def normalize(self, archive, logger) -> None:
+        if not check_archive(archive, logger):
+            return
         super().normalize(archive, logger)
 
 
@@ -384,6 +389,8 @@ class AtomicCell(Cell):
         return ase_atoms
 
     def normalize(self, archive, logger) -> None:
+        if not check_archive(archive, logger):
+            return
         super().normalize(archive, logger)
 
         # Set the name of the section
@@ -645,6 +652,8 @@ class Symmetry(ArchiveSection):
         return primitive_atomic_cell, conventional_atomic_cell
 
     def normalize(self, archive, logger) -> None:
+        if not check_archive(archive, logger):
+            return
         atomic_cell = get_sibling_section(
             section=self, sibling_section_name='cell', logger=logger
         )
@@ -730,6 +739,8 @@ class ChemicalFormula(ArchiveSection):
         self.anonymous = formula.format('anonymous')
 
     def normalize(self, archive, logger) -> None:
+        if not check_archive(archive, logger):
+            return
         atomic_cell = get_sibling_section(
             section=self, sibling_section_name='cell', logger=logger
         )
@@ -975,6 +986,8 @@ class ModelSystem(System):
         return system_type, dimensionality
 
     def normalize(self, archive, logger) -> None:
+        if not check_archive(archive, logger):
+            return
         super().normalize(archive, logger)
 
         # We don't need to normalize if the system is not representative
