@@ -308,8 +308,6 @@ class OrbitalsState(ArchiveSection):
         return degeneracy
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         super().normalize(archive, logger)
 
         # General checks for physical quantum numbers and symbols
@@ -389,8 +387,6 @@ class CoreHole(ArchiveSection):
         return None
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         super().normalize(archive, logger)
 
         # Check if n_excited_electrons is between 0 and 1
@@ -559,8 +555,6 @@ class HubbardInteractions(ArchiveSection):
         return self.u_interaction - self.j_local_exchange_interaction
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         super().normalize(archive, logger)
 
         # Obtain (u, up, j_hunds_coupling) from slater_integrals
@@ -669,8 +663,6 @@ class AtomsState(ArchiveSection):
         return None
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         super().normalize(archive, logger)
 
         # Get chemical_symbol from atomic_number and viceversa

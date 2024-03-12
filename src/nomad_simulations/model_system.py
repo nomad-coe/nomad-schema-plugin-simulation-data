@@ -209,9 +209,6 @@ class GeometricSpace(Entity):
         self.volume = cell.volume * ureg.angstrom**3
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
-
         # Skip normalization for `Entity`
         try:
             self.get_geometric_space_for_atomic_cell(logger)
@@ -301,8 +298,6 @@ class Cell(GeometricSpace):
     )
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         super().normalize(archive, logger)
 
 
@@ -389,8 +384,6 @@ class AtomicCell(Cell):
         return ase_atoms
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         super().normalize(archive, logger)
 
         # Set the name of the section
@@ -652,8 +645,6 @@ class Symmetry(ArchiveSection):
         return primitive_atomic_cell, conventional_atomic_cell
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         atomic_cell = get_sibling_section(
             section=self, sibling_section_name='cell', logger=logger
         )
@@ -739,8 +730,6 @@ class ChemicalFormula(ArchiveSection):
         self.anonymous = formula.format('anonymous')
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
-            return
         atomic_cell = get_sibling_section(
             section=self, sibling_section_name='cell', logger=logger
         )
@@ -986,7 +975,8 @@ class ModelSystem(System):
         return system_type, dimensionality
 
     def normalize(self, archive, logger) -> None:
-        if not check_archive(archive, logger):
+        # ! Patch done in order to test when passing archive=None. This should be covered by default in all normalize functions
+        if not archive:
             return
         super().normalize(archive, logger)
 
