@@ -22,13 +22,14 @@ from typing import Optional
 from structlog.stdlib import BoundLogger
 
 from nomad.datamodel.data import ArchiveSection
+from nomad.datamodel import EntryArchive
 
 
 def get_sibling_section(
     section: ArchiveSection,
     sibling_section_name: str,
+    logger: BoundLogger,
     index_sibling: int = 0,
-    logger: BoundLogger = None,
 ) -> Optional[ArchiveSection]:
     """
     Gets the sibling section of a section by performing a seesaw move by going to the parent
@@ -111,7 +112,7 @@ class RussellSaundersState:
         )
 
 
-def is_not_representative(model_system, logger: BoundLogger = None):
+def is_not_representative(model_system, logger: BoundLogger):
     """
     Checks if the given `ModelSystem` is not representative and logs a warning.
 
@@ -122,6 +123,9 @@ def is_not_representative(model_system, logger: BoundLogger = None):
     Returns:
         (bool): True if the `ModelSystem` is not representative, False otherwise.
     """
+    if model_system is None:
+        logger.warning('The `ModelSystem` is empty.')
+        return None
     if not model_system.is_representative:
         logger.warning('The `ModelSystem` was not found to be representative.')
         return True
